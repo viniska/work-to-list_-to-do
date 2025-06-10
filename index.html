@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do App</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="imdex.js"></script>
+</head>
+<div class="container">
+<body>
+    <h1>My To-Do List</h1>
+    <input type="text" id="taskInput" placeholder="Add a new task">
+    <button onclick="addTask()">Add</button>
+
+    <ul id="taskList"></ul>
+   
+
+
+  </div>
+    <script>
+        function getTasks() {
+            let tasks = localStorage.getItem('tasks');
+            return tasks ? JSON.parse(tasks) : [];
+        }
+
+        function saveTasks(tasks) {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        function addTask() {
+            let taskInput = document.getElementById('taskInput');
+            let task = taskInput.value.trim();
+
+            if (task !== '') {
+                let tasks = getTasks();
+                tasks.push(task);
+                saveTasks(tasks);
+
+                taskInput.value = '';
+                renderTasks();
+            }
+        }
+       
+
+        function deleteTask(index) {
+            let tasks = getTasks();
+            tasks.splice(index, 1);
+            saveTasks(tasks);
+            renderTasks();
+        }
+
+        function renderTasks() {
+            let taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+
+            let tasks = getTasks();
+            tasks.forEach(function(task, index) {
+                let li = document.createElement('li');
+                li.innerHTML = task + ' <button onclick="deleteTask(' + index + ')">Delete</button>';
+                taskList.appendChild(li);
+            });
+        }
+
+        renderTasks();
+    </script>
+</body>
+</html>
